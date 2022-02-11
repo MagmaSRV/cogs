@@ -1,0 +1,2 @@
+# cogs
+Плагины для MagmaBot
