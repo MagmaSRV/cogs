@@ -1,2 +1,2 @@
-# cogs
+# Cogs
 Плагины для MagmaBot
