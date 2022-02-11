@@ -1,0 +1,13 @@
+{
+    "author": [
+        "padowyt2"
+    ],
+    "install_msg": "чел харош",
+    "name": "Предложения",
+    "short": "Простая система предложений.",
+    "description": "Простая система предложений.",
+    "tags": [
+        "suggestion"
+    ],
+    "end_user_data_statement": "This cog stores user names, discriminators, and IDs upon sending a suggestion. This data is used solely to display and contact the user about any change to their suggestion."
+}
