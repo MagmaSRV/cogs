@@ -369,7 +369,7 @@ class Suggestion(commands.Cog):
             colour=await ctx.embed_colour(), timestamp=datetime.datetime.now()
         )
         embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon_url)
-        embed.title = "**__Suggestion settings (guild):__**"
+        embed.title = "**__Suggestion settings (guild):__ ОК АНД**"
 
         embed.set_footer(text="*required to function properly")
         embed.add_field(name="Same channel*:",
@@ -544,9 +544,10 @@ class Suggestion(commands.Cog):
             ctx, op_info
         )
 
-        if settings["approved"]:
-            atext = f"Принятое предложение от {op_name}"
-        else:
+        atext = f"Suggestion by {op_name}"
+        if settings["finished"]:
+            if settings["approved"]:
+                atext = f"Принятое предложение от {op_name}"
             if settings["rejected"]:
                 atext = f"Отклонённое предложение от {op_name}"
 
