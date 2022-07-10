@@ -13,7 +13,7 @@ class Suggestion(commands.Cog):
     Простая система предложений.
     """
 
-    __version__ = "1.0.69"
+    __version__ = "1.0.0"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -369,7 +369,7 @@ class Suggestion(commands.Cog):
             colour=await ctx.embed_colour(), timestamp=datetime.datetime.now()
         )
         embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon_url)
-        embed.title = "**__Suggestion settings (guild):__ ОК АНД**"
+        embed.title = "**__Suggestion settings (guild):__**"
 
         embed.set_footer(text="*required to function properly")
         embed.add_field(name="Same channel*:",
@@ -548,8 +548,9 @@ class Suggestion(commands.Cog):
         if settings["finished"]:
             if settings["approved"]:
                 atext = f"Принятое предложение от {op_name}"
-            if settings["rejected"]:
-                atext = f"Отклонённое предложение от {op_name}"
+            else:
+                if settings["rejected"]:
+                    atext = f"Отклонённое предложение от {op_name}"
 
         embed = discord.Embed(
             color=await ctx.embed_colour(),
@@ -660,10 +661,10 @@ class Suggestion(commands.Cog):
             ctx, op_info
         )
 
-        approved = "Approved" if approve else "Rejected"
+        approved = "Принятое" if approve else "Отклонённое"
 
         embed.set_author(
-            name=f"{approved} suggestion by {op_name}", icon_url=op_avatar)
+            name=f"{approved} предложение от {op_name}", icon_url=op_avatar)
         embed.add_field(
             name="Результат:", value=await self._get_results(ctx, old_msg), inline=False
         )
