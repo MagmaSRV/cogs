@@ -544,7 +544,7 @@ class Suggestion(commands.Cog):
             ctx, op_info
         )
 
-        atext = f"Suggestion by {op_name}"
+        atext = f"ммм "
         if settings["finished"]:
             if settings["approved"]:
                 atext = f"Принятое предложение от {op_name}"
