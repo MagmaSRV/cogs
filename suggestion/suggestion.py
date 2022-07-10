@@ -544,13 +544,11 @@ class Suggestion(commands.Cog):
             ctx, op_info
         )
 
-        atext = f"ммм "
-        if settings["finished"]:
-            if settings["approved"]:
-                atext = f"Принятое предложение от {op_name}"
-            else:
-                if settings["rejected"]:
-                    atext = f"Отклонённое предложение от {op_name}"
+        if settings["approved"]:
+            atext = f"Принятое предложение от {op_name}"
+        else:
+            if settings["rejected"]:
+                atext = f"Отклонённое предложение от {op_name}"
 
         embed = discord.Embed(
             color=await ctx.embed_colour(),
