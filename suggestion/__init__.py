@@ -1,4 +1,4 @@
-from .suggestion.suggestion import Suggestion
+from .suggestion import Suggestion
 
 
 def setup(bot):
