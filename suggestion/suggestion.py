@@ -711,5 +711,5 @@ class Suggestion(commands.Cog):
         await ctx.tick()
 
         await self._contact_op(
-            op, f"Ваше предложение было принято {approved.lower()}!", embed
+            op, f"Ваше предложение было принято!", embed
         )
