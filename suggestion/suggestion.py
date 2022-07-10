@@ -547,10 +547,10 @@ class Suggestion(commands.Cog):
         atext = f"Suggestion by {op_name}"
         if settings["finished"]:
             if settings["approved"]:
-                atext = f"Approved suggestion by {op_name}"
+                atext = f"Принятое предложение от {op_name}"
             else:
                 if settings["rejected"]:
-                    atext = f"Rejected suggestion by {op_name}"
+                    atext = f"Отклонённое предложение от {op_name}"
 
         embed = discord.Embed(
             color=await ctx.embed_colour(),
@@ -666,7 +666,7 @@ class Suggestion(commands.Cog):
         embed.set_author(
             name=f"{approved} suggestion by {op_name}", icon_url=op_avatar)
         embed.add_field(
-            name="Results:", value=await self._get_results(ctx, old_msg), inline=False
+            name="Результат:", value=await self._get_results(ctx, old_msg), inline=False
         )
         if reason:
             embed.add_field(name="Причина:", value=reason, inline=False)
