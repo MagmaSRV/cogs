@@ -13,7 +13,7 @@ class Suggestion(commands.Cog):
     Простая система предложений.
     """
 
-    __version__ = "1.0.0"
+    __version__ = "1.0.69"
 
     def __init__(self, bot: Red):
         self.bot = bot
