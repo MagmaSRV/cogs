@@ -1,0 +1,15 @@
+{
+    "author": [
+        "PadowYT2"
+    ],
+    "install_msg": "чел харош",
+    "name": "form",
+    "short": "Create a reaction-based ticketing system.",
+    "description": "Allow users to create ticket channels by clicking on a set reaction on a set message.",
+    "tags": [
+        "tools",
+        "utility"
+    ],
+    "requirements": [],
+    "hidden": false
+}
