@@ -3,7 +3,7 @@ from typing import List, Optional
 from datetime import datetime
 import discord
 
-from refund.extensions.views.ticket import Ticket
+from request.extensions.views.ticket import Ticket
 
 SPACE = " \N{ZERO WIDTH SPACE}"
 

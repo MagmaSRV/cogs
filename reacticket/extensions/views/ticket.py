@@ -6,12 +6,12 @@ from datetime import datetime
 import discord
 import asyncio
 
-from report.extensions.views.confirmation import Confirmation
-from report.extensions.views.alert import Alert
+from request.extensions.views.confirmation import Confirmation
+from request.extensions.views.alert import Alert
 
 if TYPE_CHECKING:
-    from report.extensions.views.queue import Queue
-    from report.report import report
+    from request.extensions.views.queue import Queue
+    from request.request import Request
 
 
 class Ticket(discord.ui.View):
@@ -93,7 +93,7 @@ class Ticket(discord.ui.View):
             title="Assign Moderator",
             description=(
                 "Mention or provide user ID of the Moderator you would like to "
-                "assign to this ticket. They must be a Red Admin or have a report "
+                "assign to this ticket. They must be a Red Admin or have a Request "
                 "Support Role, and not be the author of the ticket."
             ),
             color=await self.ctx.embed_color(),
@@ -152,7 +152,7 @@ class Ticket(discord.ui.View):
                 return
 
         ctx = self.ctx
-        cog: report = ctx.cog
+        cog: Request = ctx.cog
 
         guild_settings = await cog.config.guild(ctx.guild).all()
 
@@ -162,13 +162,13 @@ class Ticket(discord.ui.View):
         ):
             alert = Alert(
                 title="Failed to Assign Moderator",
-                description="The specified user is not a Red Admin or report Support",
+                description="The specified user is not a Red Admin or Request Support",
                 color=await ctx.embed_color(),
             )
         elif moderator.id == self.ticket["assigned"]:
             alert = Alert(
                 title="Failed to Assign Moderator",
-                description="The specified user is not a Red Admin or report Support",
+                description="The specified user is not a Red Admin or Request Support",
                 color=await ctx.embed_color(),
             )
         elif moderator.id == self.ticket["user"]:

@@ -5,12 +5,12 @@ import discord
 import asyncio
 import copy
 
-from report.extensions.abc import MixinMeta
-from report.extensions.mixin import settings
+from request.extensions.abc import MixinMeta
+from request.extensions.mixin import RTMixin
 
 
-class reportBaseSettingsMixin(MixinMeta):
-    @settings.group(name="precreationsettings", aliases=["precs"])
+class RequestBaseSettingsMixin(MixinMeta):
+    @RTMixin.settings.group(name="precreationsettings", aliases=["precs"])
     async def pre_creation_settings(self, ctx):
         """Control the actions that are checked/occur before ticket is created"""
         pass
@@ -80,12 +80,12 @@ class reportBaseSettingsMixin(MixinMeta):
                 if user.id in blacklist:
                     blacklist.remove(user.id)
                     await ctx.send(
-                        f"{user.display_name} has been removed from the report blacklist."
+                        f"{user.display_name} has been removed from the request blacklist."
                     )
                 else:
                     blacklist.append(user.id)
                     await ctx.send(
-                        f"{user.display_name} has been add to the report blacklist."
+                        f"{user.display_name} has been add to the request blacklist."
                     )
         else:
             blacklist = await self.config.guild(ctx.guild).blacklist()
@@ -110,13 +110,13 @@ class reportBaseSettingsMixin(MixinMeta):
         max.  Leaving blank keeps the state previously set.
 
         Examples (in situation where these commands are run one after another):
-            `[p]report settings precreationsettings maxtickets 1 False`
+            `[p]request settings precreationsettings maxtickets 1 False`
             Users can make 1 ticket, no DM.
 
-            `[p]report settings precreationsettings maxtickets 2 True`
+            `[p]request settings precreationsettings maxtickets 2 True`
             Users can make 2 tickets, send DM.
 
-            `[p]report settings precreationsettings maxtickets 1`
+            `[p]request settings precreationsettings maxtickets 1`
             Users can make 1 ticket, send DM (carries over from last command)."""
         if number < 1:
             await ctx.send("Maximum number of tickets per user must be greater than 0.")
@@ -131,7 +131,7 @@ class reportBaseSettingsMixin(MixinMeta):
                 "Max number of tickets per user and DM setting have been successfully updated."
             )
 
-    @settings.group(name="postcreationsettings", aliases=["postcs"])
+    @RTMixin.settings.group(name="postcreationsettings", aliases=["postcs"])
     async def post_creation_settings(self, ctx):
         """Control the actions that occur post the ticket being created"""
         pass
@@ -223,7 +223,7 @@ class reportBaseSettingsMixin(MixinMeta):
             )
 
         embed.set_footer(
-            text=f"Use {ctx.prefix}report settings postcreationsettings "
+            text=f"Use {ctx.prefix}request settings postcreationsettings "
             "ticketname select to change to one of these presets."
         )
         await ctx.send(embed=embed)
@@ -265,7 +265,7 @@ class reportBaseSettingsMixin(MixinMeta):
         else:
             await ctx.send(
                 "Preset not selected.  To select this, use the command "
-                f"`{ctx.prefix}report settings postcreationsettings "
+                f"`{ctx.prefix}request settings postcreationsettings "
                 f"ticketname select {len(data['presets'])}`."
             )
 
@@ -293,7 +293,7 @@ class reportBaseSettingsMixin(MixinMeta):
         """Select a ticket name preset to use.
 
         To view available presets, use the command
-        `[p]report settings postcreationsettings ticketnames list`"""
+        `[p]request settings postcreationsettings ticketnames list`"""
         real_index = index - 1
         settings = await self.config.guild(ctx.guild).presetname()
         if settings["chosen"] == real_index:
@@ -303,7 +303,7 @@ class reportBaseSettingsMixin(MixinMeta):
         if index > len(settings["presets"]):
             await ctx.send(
                 "No preset exists at that index.  To view available presets, check out the "
-                f"command `{ctx.prefix}report settings postcreationsettings ticketnames list`."
+                f"command `{ctx.prefix}request settings postcreationsettings ticketnames list`."
             )
             return
 
@@ -311,7 +311,7 @@ class reportBaseSettingsMixin(MixinMeta):
         await self.config.guild(ctx.guild).presetname.set(settings)
         await ctx.send("Successfully changed selected ticket name preset.")
 
-    @settings.command()
+    @RTMixin.settings.command()
     async def enable(self, ctx, yes_or_no: Optional[bool] = None):
         """Starts listening for the set Reaction on the set Message to process tickets"""
         # We'll run through a test of all the settings to ensure everything is set properly
@@ -322,7 +322,7 @@ class reportBaseSettingsMixin(MixinMeta):
         # (which is bullshit), therefore, I have to require it.  I would really rather not.
         if not ctx.channel.permissions_for(ctx.guild.me).administrator:
             await ctx.send(
-                "I require Administrator permission to start the report system.  Note that "
+                "I require Administrator permission to start the Request system.  Note that "
                 "under normal circumstances this would not be required, however Discord has "
                 "changed how permissions operate with channel overwrites, and the "
                 "MANAGE_PERMISSIONS permission requires Administrator privilege."
@@ -336,7 +336,7 @@ class reportBaseSettingsMixin(MixinMeta):
         if channel_id == message_id == 0:
             await ctx.send(
                 "Please set the message to listen on first with"
-                f"`{ctx.prefix}report settings precreationsettings setmsg`."
+                f"`{ctx.prefix}request settings precreationsettings setmsg`."
             )
             return
 
@@ -347,7 +347,7 @@ class reportBaseSettingsMixin(MixinMeta):
             await self.config.guild(ctx.guild).msg.set("0-0")
             await ctx.send(
                 "Please reset the message to listen on "
-                f"`{ctx.prefix}report settings precreationsettings setmsg`."
+                f"`{ctx.prefix}request settings precreationsettings setmsg`."
                 "\nReason: Channel has been deleted"
             )
             return
@@ -356,7 +356,7 @@ class reportBaseSettingsMixin(MixinMeta):
             await self.config.guild(ctx.guild).msg.set("0-0")
             await ctx.send(
                 "Please reset the message to listen on "
-                f"`{ctx.prefix}report settings precreationsettings setmsg`."
+                f"`{ctx.prefix}request settings precreationsettings setmsg`."
                 "\nReason: Message has been deleted"
             )
             return
@@ -395,7 +395,7 @@ class reportBaseSettingsMixin(MixinMeta):
         if not category_id:
             await ctx.send(
                 "Please set the category to create ticket channels under with "
-                f"`{ctx.prefix}report settings postcreationsettings category`."
+                f"`{ctx.prefix}request settings postcreationsettings category`."
             )
             return
 
@@ -403,7 +403,7 @@ class reportBaseSettingsMixin(MixinMeta):
         if not category:
             await ctx.send(
                 "Please reset the category to create ticket channels under with "
-                f"`{ctx.prefix}report settings postcreationsettings category`.\n"
+                f"`{ctx.prefix}request settings postcreationsettings category`.\n"
                 "Reason: Category has been deleted."
             )
             return
@@ -414,7 +414,7 @@ class reportBaseSettingsMixin(MixinMeta):
             if not archive["category"]:
                 await ctx.send(
                     "Archive is enabled but no category is set. Please set one with "
-                    f"`{ctx.prefix}report settings closesettings archive category`."
+                    f"`{ctx.prefix}request settings closesettings archive category`."
                 )
                 return
 
@@ -422,7 +422,7 @@ class reportBaseSettingsMixin(MixinMeta):
             if not archive_category:
                 await ctx.send(
                     "Archive is enabled but set category does not exist. Please reset it with "
-                    f"`{ctx.prefix}report settings closesettings archive category`."
+                    f"`{ctx.prefix}request settings closesettings archive category`."
                 )
                 return
 
@@ -433,7 +433,7 @@ class reportBaseSettingsMixin(MixinMeta):
             if not report_channel:
                 await ctx.send(
                     "Reporting is enabled but the channel has been deleted. Please reset it with "
-                    f"`{ctx.prefix}report settings closesettings reports`."
+                    f"`{ctx.prefix}request settings closesettings reports`."
                 )
 
             if not report_channel.permissions_for(ctx.guild.me).send_messages:
@@ -450,7 +450,7 @@ class reportBaseSettingsMixin(MixinMeta):
 
         await ctx.send("All checks passed.  Ticket system is now active.")
 
-    @settings.command()
+    @RTMixin.settings.command()
     async def disable(self, ctx):
         """Disable ticketing system"""
         await self.config.guild(ctx.guild).enabled.set(False)

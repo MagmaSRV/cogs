@@ -1,11 +1,11 @@
 from typing import Optional
 
-from build.extensions.abc import MixinMeta
-from build.extensions.mixin import settings
+from request.extensions.abc import MixinMeta
+from request.extensions.mixin import RTMixin
 
 
-class buildUserSettingsMixin(MixinMeta):
-    @settings.group()
+class RequestUserSettingsMixin(MixinMeta):
+    @RTMixin.settings.group()
     async def userpermissions(self, ctx):
         """Control the permissions that users have with their own tickets"""
         pass

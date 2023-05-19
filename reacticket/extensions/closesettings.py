@@ -4,12 +4,12 @@ from typing import Optional
 import discord
 import contextlib
 
-from report.extensions.abc import MixinMeta
-from report.extensions.mixin import settings
+from request.extensions.abc import MixinMeta
+from request.extensions.mixin import RTMixin
 
 
-class reportCloseSettingsMixin(MixinMeta):
-    @settings.group()
+class RequestCloseSettingsMixin(MixinMeta):
+    @RTMixin.settings.group()
     async def closesettings(self, ctx):
         """Control what actions occur when a ticket is closed"""
         pass

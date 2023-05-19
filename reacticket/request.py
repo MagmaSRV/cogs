@@ -35,11 +35,11 @@ import time
 from abc import ABC
 
 # ABC Mixins
-from build.extensions.mixin import RTMixin
-from build.extensions.base import buildBaseMixin
-from build.extensions.basesettings import buildBaseSettingsMixin
-from build.extensions.closesettings import buildCloseSettingsMixin
-from build.extensions.usersettings import buildUserSettingsMixin
+from request.extensions.mixin import RTMixin
+from request.extensions.base import RequestBaseMixin
+from request.extensions.basesettings import RequestBaseSettingsMixin
+from request.extensions.closesettings import RequestCloseSettingsMixin
+from request.extensions.usersettings import RequestUserSettingsMixin
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
@@ -47,11 +47,11 @@ class CompositeMetaClass(type(commands.Cog), type(ABC)):
     metaclass."""
 
 
-class build(
-    buildBaseMixin,
-    buildBaseSettingsMixin,
-    buildCloseSettingsMixin,
-    buildUserSettingsMixin,
+class Request(
+    RequestBaseMixin,
+    RequestBaseSettingsMixin,
+    RequestCloseSettingsMixin,
+    RequestUserSettingsMixin,
     RTMixin,
     commands.Cog,
     metaclass=CompositeMetaClass,
@@ -81,7 +81,7 @@ class build(
             # Miscellaneous
             "supportroles": [],
             "blacklist": [],
-            "build": 0,
+            "report": 0,
             "enabled": False,
             "created": {},
         }
@@ -204,12 +204,12 @@ class build(
                 ticket["channel"])
             added_users = [user for u in ticket["added"]
                            if (user := member.guild.get_member(u))]
-            if guild_settings["build"] != 0:
-                building_channel: Optional[discord.TextChannel] = self.bot.get_channel(
-                    guild_settings["build"]
+            if guild_settings["report"] != 0:
+                reporting_channel: Optional[discord.TextChannel] = self.bot.get_channel(
+                    guild_settings["report"]
                 )
-                if building_channel:
-                    if await self.embed_requested(building_channel):
+                if reporting_channel:
+                    if await self.embed_requested(reporting_channel):
                         embed = discord.Embed(
                             title="Ticket Closed",
                             description=(
@@ -217,7 +217,7 @@ class build(
                                 f"{member.mention} "
                                 f"has been closed due to the user leaving the guild."
                             ),
-                            color=await self.bot.get_embed_color(building_channel),
+                            color=await self.bot.get_embed_color(reporting_channel),
                         )
                         if ticket["assigned"]:
                             moderator = getattr(
@@ -228,7 +228,7 @@ class build(
                             embed.add_field(
                                 name="Assigned moderator", value=moderator,
                             )
-                        await building_channel.send(embed=embed)
+                        await reporting_channel.send(embed=embed)
                     else:
                         message = (
                             f"Ticket {channel.mention} created by "
@@ -242,7 +242,7 @@ class build(
                                 )
                             )
                             message += f"\nAssigned moderator: {moderator}"
-                        await building_channel.send(
+                        await reporting_channel.send(
                             message, allowed_mentions=discord.AllowedMentions.none()
                         )
             if guild_settings["archive"]["enabled"] and channel and archive:
@@ -438,12 +438,12 @@ class build(
             if guild_settings["usercanclose"]:
                 sent = await created_channel.send(
                     f"Ticket created for {user.display_name}\nTo close this, "
-                    f"Administrators or {user.display_name} may run `[p]build close`."
+                    f"Administrators or {user.display_name} may run `[p]request close`."
                 )
             else:
                 sent = await created_channel.send(
                     f"Ticket created for {user.display_name}\n"
-                    "Only Administrators may close this by running `[p]build close`."
+                    "Only Administrators may close this by running `[p]request close`."
                 )
         else:
             try:
@@ -463,12 +463,12 @@ class build(
                 if guild_settings["usercanclose"]:
                     sent = await created_channel.send(
                         f"Ticket created for {user.display_name}\nTo close this, "
-                        f"Administrators or {user.display_name} may run `[p]build close`."
+                        f"Administrators or {user.display_name} may run `[p]request close`."
                     )
                 else:
                     sent = await created_channel.send(
                         f"Ticket created for {user.display_name}\n"
-                        "Only Administrators may close this by running `[p]build close`."
+                        "Only Administrators may close this by running `[p]request close`."
                     )
 
         # To prevent race conditions...
@@ -492,10 +492,10 @@ class build(
             )
             await message.remove_reaction(payload.emoji, member=user)
 
-        if guild_settings["build"] != 0:
-            building_channel = self.bot.get_channel(guild_settings["build"])
-            if building_channel:
-                if await self.embed_requested(building_channel):
+        if guild_settings["report"] != 0:
+            reporting_channel = self.bot.get_channel(guild_settings["report"])
+            if reporting_channel:
+                if await self.embed_requested(reporting_channel):
                     embed = discord.Embed(
                         title="Ticket Opened",
                         description=(
@@ -520,7 +520,7 @@ class build(
                             "other users to/from their tickets.\n"
                         )
                     embed.add_field(name="User Permission", value=description)
-                    await building_channel.send(embed=embed)
+                    await reporting_channel.send(embed=embed)
                 else:
                     message = (
                         f"Ticket created by {str(user)} has been opened.\n"
@@ -545,4 +545,4 @@ class build(
                     else:
                         message += "Users cannot close or add/remove users to/from their tickets."
 
-                    await building_channel.send(message)
+                    await reporting_channel.send(message)

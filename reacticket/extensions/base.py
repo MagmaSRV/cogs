@@ -6,14 +6,14 @@ import contextlib
 import asyncio
 
 
-from refund.extensions.abc import MixinMeta
-from refund.extensions.mixin import refund
+from request.extensions.abc import MixinMeta
+from request.extensions.mixin import RTMixin
 
 if discord.__version__ == "2.0.0a" or TYPE_CHECKING:
-    from refund.extensions.views.queue import Queue
+    from request.extensions.views.queue import Queue
 
 
-class refundBaseMixin(MixinMeta):
+class RequestBaseMixin(MixinMeta):
     async def report_close(self, ctx, ticket, author, guild_settings, reason):
         representing = author.mention if isinstance(
             author, discord.Member) else author
@@ -162,7 +162,7 @@ class refundBaseMixin(MixinMeta):
                             "permission in the category."
                         )
 
-    @refund.command()
+    @RTMixin.request.command()
     async def close(self, ctx, *, reason=None):
         """Closes the created ticket.
 
@@ -249,7 +249,7 @@ class refundBaseMixin(MixinMeta):
             added_users=added_users,
         )
 
-    @refund.command(name="add")
+    @RTMixin.request.command(name="add")
     async def ticket_add(self, ctx, user: discord.Member):
         """Add a user to the current ticket."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -337,7 +337,7 @@ class refundBaseMixin(MixinMeta):
 
         await ctx.send(f"{user.mention} has been added to the ticket.")
 
-    @refund.command(name="remove")
+    @RTMixin.request.command(name="remove")
     async def ticket_remove(self, ctx, user: discord.Member):
         """Remove a user from the current ticket."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -421,7 +421,7 @@ class refundBaseMixin(MixinMeta):
 
         await ctx.send(f"{user.mention} has been removed from the ticket.")
 
-    @refund.command(name="name")
+    @RTMixin.request.command(name="name")
     async def ticket_name(self, ctx, *, name: str):
         """Rename the ticket in scope."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -514,7 +514,7 @@ class refundBaseMixin(MixinMeta):
         await channel.send(
             (
                 "This ticket has been locked by the Administrators.  It can be unlocked by using "
-                f"`{ctx.prefix}refund unlock {channel.mention}`, or through the queue."
+                f"`{ctx.prefix}request unlock {channel.mention}`, or through the queue."
             )
         )
 
@@ -546,7 +546,7 @@ class refundBaseMixin(MixinMeta):
 
     def is_support_or_superior():
         async def predicate(ctx):
-            guild_settings = await ctx.bot.get_cog("refund").config.guild(ctx.guild).all()
+            guild_settings = await ctx.bot.get_cog("Request").config.guild(ctx.guild).all()
             is_admin = await is_admin_or_superior(ctx.bot, ctx.author) or any(
                 [ur.id in guild_settings["supportroles"]
                     for ur in ctx.author.roles]
@@ -559,11 +559,11 @@ class refundBaseMixin(MixinMeta):
         return commands.check(predicate)
 
     @is_support_or_superior()
-    @refund.command(aliases=["unlock"])
+    @RTMixin.request.command(aliases=["unlock"])
     async def lock(self, ctx, channel: Optional[discord.TextChannel] = None):
         """Lock the specified ticket channel.  If no channel is provided, defaults to current.
 
-        Note: You must have a refund Support Role or a Red Admin Role to run this."""
+        Note: You must have a Request Support Role or a Red Admin Role to run this."""
         if channel is None:
             channel = ctx.channel
 
@@ -606,7 +606,7 @@ class refundBaseMixin(MixinMeta):
                     break
 
     @is_support_or_superior()
-    @refund.command(aliases=["moderator", "mod"])
+    @RTMixin.request.command(aliases=["moderator", "mod"])
     async def assign(
         self, ctx, moderator: discord.Member, ticket: Optional[discord.TextChannel] = None
     ):
@@ -633,7 +633,7 @@ class refundBaseMixin(MixinMeta):
         ):
             await ctx.send(
                 "The moderator being assigned must be a Red Administrator "
-                "or have a refund Support Role."
+                "or have a Request Support Role."
             )
             return
 
@@ -688,7 +688,7 @@ class refundBaseMixin(MixinMeta):
     @on_discord_alpha()
     @is_support_or_superior()
     @commands.bot_has_permissions(embed_links=True)
-    @refund.command(aliases=["tickets"])
+    @RTMixin.request.command(aliases=["tickets"])
     async def queue(self, ctx):
         """List, modify and close tickets sorted based upon when they were opened"""
         unsorted_tickets = await self.config.guild(ctx.guild).created()
