@@ -99,7 +99,7 @@ class RequestBaseMixin(MixinMeta):
                 allowed_mentions=discord.AllowedMentions.none(),
             )
 
-            await asyncio.sleep(60)
+            await asyncio.sleep(3)
 
             try:
                 admin_roles = [
@@ -146,11 +146,11 @@ class RequestBaseMixin(MixinMeta):
                             )
             await destination.send(
                 f"Ticket {channel.mention} for {representing} has been closed. "
-                "Channel will be deleted in one minute, if exists.",
+                "Channel will be deleted in three seconds, if exists.",
                 allowed_mentions=discord.AllowedMentions.none(),
             )
 
-            await asyncio.sleep(60)
+            await asyncio.sleep(3)
 
             if channel:
                 try:
