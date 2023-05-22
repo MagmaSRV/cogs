@@ -268,13 +268,13 @@ class Request(
                                 )
                 await channel.send(
                     f"Ticket {channel.mention} for {member.display_name} has been closed "
-                    "due to author leaving.  Channel will be deleted in one minute, if exists."
+                    "due to author leaving.  Channel will be deleted in three seconds, if exists."
                 )
             async with self.config.guild(member.guild).created() as tickets:
                 if str(member.id) in tickets:
                     del tickets[str(member.id)]
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(3)
 
         for channel, added_users in post_processing.items():
             if guild_settings["archive"]["enabled"] and channel and archive:
