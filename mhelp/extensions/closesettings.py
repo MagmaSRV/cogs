@@ -4,8 +4,8 @@ from typing import Optional
 import discord
 import contextlib
 
-from help.extensions.abc import MixinMeta
-from help.extensions.mixin import RTMixin
+from mhelp.extensions.abc import MixinMeta
+from mhelpp.extensions.mixin import RTMixin
 
 
 class HelpCloseSettingsMixin(MixinMeta):

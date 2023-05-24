@@ -35,11 +35,11 @@ import time
 from abc import ABC
 
 # ABC Mixins
-from help.extensions.mixin import RTMixin
-from help.extensions.base import HelpBaseMixin
-from help.extensions.basesettings import HelpBaseSettingsMixin
-from help.extensions.closesettings import HelpCloseSettingsMixin
-from help.extensions.usersettings import HelpUserSettingsMixin
+from mhelp.extensions.mixin import RTMixin
+from mhelp.extensions.base import MhelpBaseMixin
+from mhelp.extensions.basesettings import MhelpBaseSettingsMixin
+from mhelp.extensions.closesettings import MhelpCloseSettingsMixin
+from mhelp.extensions.usersettings import MhelpUserSettingsMixin
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
@@ -47,11 +47,11 @@ class CompositeMetaClass(type(commands.Cog), type(ABC)):
     metaclass."""
 
 
-class Help(
-    HelpBaseMixin,
-    HelpBaseSettingsMixin,
-    HelpCloseSettingsMixin,
-    HelpUserSettingsMixin,
+class Mhelp(
+    MhelpBaseMixin,
+    MhelpBaseSettingsMixin,
+    MhelpCloseSettingsMixin,
+    MhelpUserSettingsMixin,
     RTMixin,
     commands.Cog,
     metaclass=CompositeMetaClass,
@@ -209,7 +209,7 @@ class Help(
                     guild_settings["report"]
                 )
                 if reporting_channel:
-                    if await self.embed_helped(reporting_channel):
+                    if await self.embed_mhelped(reporting_channel):
                         embed = discord.Embed(
                             title="Ticket Closed",
                             description=(
@@ -438,12 +438,12 @@ class Help(
             if guild_settings["usercanclose"]:
                 sent = await created_channel.send(
                     f"Ticket created for {user.display_name}\nTo close this, "
-                    f"Administrators or {user.display_name} may run `[p]help close`."
+                    f"Administrators or {user.display_name} may run `[p]mhelp close`."
                 )
             else:
                 sent = await created_channel.send(
                     f"Ticket created for {user.display_name}\n"
-                    "Only Administrators may close this by running `[p]help close`."
+                    "Only Administrators may close this by running `[p]mhelp close`."
                 )
         else:
             try:
@@ -463,12 +463,12 @@ class Help(
                 if guild_settings["usercanclose"]:
                     sent = await created_channel.send(
                         f"Ticket created for {user.display_name}\nTo close this, "
-                        f"Administrators or {user.display_name} may run `[p]help close`."
+                        f"Administrators or {user.display_name} may run `[p]mhelp close`."
                     )
                 else:
                     sent = await created_channel.send(
                         f"Ticket created for {user.display_name}\n"
-                        "Only Administrators may close this by running `[p]help close`."
+                        "Only Administrators may close this by running `[p]mhelp close`."
                     )
 
         # To prevent race conditions...
@@ -495,7 +495,7 @@ class Help(
         if guild_settings["report"] != 0:
             reporting_channel = self.bot.get_channel(guild_settings["report"])
             if reporting_channel:
-                if await self.embed_helped(reporting_channel):
+                if await self.embed_mhelped(reporting_channel):
                     embed = discord.Embed(
                         title="Ticket Opened",
                         description=(

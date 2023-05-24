@@ -6,12 +6,12 @@ from datetime import datetime
 import discord
 import asyncio
 
-from help.extensions.views.confirmation import Confirmation
-from help.extensions.views.alert import Alert
+from mhelp.extensions.views.confirmation import Confirmation
+from mhelp.extensions.views.alert import Alert
 
 if TYPE_CHECKING:
-    from help.extensions.views.queue import Queue
-    from help.help import Help
+    from mhelp.extensions.views.queue import Queue
+    from mhelp.mhelp import Mhelp
 
 
 class Ticket(discord.ui.View):
@@ -93,7 +93,7 @@ class Ticket(discord.ui.View):
             title="Assign Moderator",
             description=(
                 "Mention or provide user ID of the Moderator you would like to "
-                "assign to this ticket. They must be a Red Admin or have a Help "
+                "assign to this ticket. They must be a Red Admin or have a Mhelp "
                 "Support Role, and not be the author of the ticket."
             ),
             color=await self.ctx.embed_color(),
@@ -152,7 +152,7 @@ class Ticket(discord.ui.View):
                 return
 
         ctx = self.ctx
-        cog: Help = ctx.cog
+        cog: Mhelp = ctx.cog
 
         guild_settings = await cog.config.guild(ctx.guild).all()
 
@@ -162,13 +162,13 @@ class Ticket(discord.ui.View):
         ):
             alert = Alert(
                 title="Failed to Assign Moderator",
-                description="The specified user is not a Red Admin or Help Support",
+                description="The specified user is not a Red Admin or Mhelp Support",
                 color=await ctx.embed_color(),
             )
         elif moderator.id == self.ticket["assigned"]:
             alert = Alert(
                 title="Failed to Assign Moderator",
-                description="The specified user is not a Red Admin or Help Support",
+                description="The specified user is not a Red Admin or Mhelp Support",
                 color=await ctx.embed_color(),
             )
         elif moderator.id == self.ticket["user"]:

@@ -6,11 +6,11 @@ import contextlib
 import asyncio
 
 
-from help.extensions.abc import MixinMeta
-from help.extensions.mixin import RTMixin
+from mhelp.extensions.abc import MixinMeta
+from mhelpp.extensions.mixin import RTMixin
 
 if discord.__version__ == "2.0.0a" or TYPE_CHECKING:
-    from help.extensions.views.queue import Queue
+    from mhelpp.extensions.views.queue import Queue
 
 
 class HelpBaseMixin(MixinMeta):
@@ -22,7 +22,7 @@ class HelpBaseMixin(MixinMeta):
         if guild_settings["report"] != 0:
             reporting_channel = self.bot.get_channel(guild_settings["report"])
             if reporting_channel:
-                if await self.embed_helped(reporting_channel):
+                if await self.embed_mhelped(reporting_channel):
                     embed = discord.Embed(
                         title="Ticket Closed",
                         description=(
@@ -162,7 +162,7 @@ class HelpBaseMixin(MixinMeta):
                             "permission in the category."
                         )
 
-    @RTMixin.help.command()
+    @RTMixin.mhelp.command()
     async def close(self, ctx, *, reason=None):
         """Closes the created ticket.
 
@@ -249,7 +249,7 @@ class HelpBaseMixin(MixinMeta):
             added_users=added_users,
         )
 
-    @RTMixin.help.command(name="add")
+    @RTMixin.mhelp.command(name="add")
     async def ticket_add(self, ctx, user: discord.Member):
         """Add a user to the current ticket."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -337,7 +337,7 @@ class HelpBaseMixin(MixinMeta):
 
         await ctx.send(f"{user.mention} has been added to the ticket.")
 
-    @RTMixin.help.command(name="remove")
+    @RTMixin.mhelp.command(name="remove")
     async def ticket_remove(self, ctx, user: discord.Member):
         """Remove a user from the current ticket."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -421,7 +421,7 @@ class HelpBaseMixin(MixinMeta):
 
         await ctx.send(f"{user.mention} has been removed from the ticket.")
 
-    @RTMixin.help.command(name="name")
+    @RTMixin.mhelp.command(name="name")
     async def ticket_name(self, ctx, *, name: str):
         """Rename the ticket in scope."""
         guild_settings = await self.config.guild(ctx.guild).all()
@@ -514,7 +514,7 @@ class HelpBaseMixin(MixinMeta):
         await channel.send(
             (
                 "This ticket has been locked by the Administrators.  It can be unlocked by using "
-                f"`{ctx.prefix}help unlock {channel.mention}`, or through the queue."
+                f"`{ctx.prefix}mhelp unlock {channel.mention}`, or through the queue."
             )
         )
 
@@ -559,7 +559,7 @@ class HelpBaseMixin(MixinMeta):
         return commands.check(predicate)
 
     @is_support_or_superior()
-    @RTMixin.help.command(aliases=["unlock"])
+    @RTMixin.mhelp.command(aliases=["unlock"])
     async def lock(self, ctx, channel: Optional[discord.TextChannel] = None):
         """Lock the specified ticket channel.  If no channel is provided, defaults to current.
 
@@ -606,7 +606,7 @@ class HelpBaseMixin(MixinMeta):
                     break
 
     @is_support_or_superior()
-    @RTMixin.help.command(aliases=["moderator", "mod"])
+    @RTMixin.mhelp.command(aliases=["moderator", "mod"])
     async def assign(
         self, ctx, moderator: discord.Member, ticket: Optional[discord.TextChannel] = None
     ):
@@ -688,7 +688,7 @@ class HelpBaseMixin(MixinMeta):
     @on_discord_alpha()
     @is_support_or_superior()
     @commands.bot_has_permissions(embed_links=True)
-    @RTMixin.help.command(aliases=["tickets"])
+    @RTMixin.mhelp.command(aliases=["tickets"])
     async def queue(self, ctx):
         """List, modify and close tickets sorted based upon when they were opened"""
         unsorted_tickets = await self.config.guild(ctx.guild).created()

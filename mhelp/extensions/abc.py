@@ -13,8 +13,8 @@ class MixinMeta(ABC):
         self.config: Config
         self.bot: Red
 
-    async def embed_helped(self, channel):
-        # Copy of ctx.embed_helped, but with the context taken out
+    async def embed_mhelped(self, channel):
+        # Copy of ctx.embed_mhelped, but with the context taken out
         if not channel.permissions_for(channel.guild.me).embed_links:
             return False
 

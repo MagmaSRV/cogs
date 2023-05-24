@@ -5,15 +5,15 @@ class RTMixin:
     """ This is mostly here to easily mess with things... """
     @checks.bot_has_permissions(add_reactions=True)
     @commands.guild_only()
-    @commands.group(name="help")
-    async def help(self, ctx: commands.Context):
+    @commands.group(name="mhelp")
+    async def mhelp(self, ctx: commands.Context):
         """Create a reaction ticket system in your server"""
         pass
 
     @checks.admin()
-    @help.group(invoke_without_command=True, aliases=["set"])
+    @mhelp.group(invoke_without_command=True, aliases=["set"])
     async def settings(self, ctx):
-        """Manage settings for Help"""
+        """Manage settings for Mhelp"""
         await ctx.send_help()
         guild_settings = await self.config.guild(ctx.guild).all()
         channel_id, message_id = list(

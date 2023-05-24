@@ -5,8 +5,8 @@ import discord
 import asyncio
 import copy
 
-from help.extensions.abc import MixinMeta
-from help.extensions.mixin import RTMixin
+from mhelp.extensions.abc import MixinMeta
+from mhelpp.extensions.mixin import RTMixin
 
 
 class HelpBaseSettingsMixin(MixinMeta):
@@ -80,12 +80,12 @@ class HelpBaseSettingsMixin(MixinMeta):
                 if user.id in blacklist:
                     blacklist.remove(user.id)
                     await ctx.send(
-                        f"{user.display_name} has been removed from the help blacklist."
+                        f"{user.display_name} has been removed from the mhelp blacklist."
                     )
                 else:
                     blacklist.append(user.id)
                     await ctx.send(
-                        f"{user.display_name} has been add to the help blacklist."
+                        f"{user.display_name} has been add to the mhelp blacklist."
                     )
         else:
             blacklist = await self.config.guild(ctx.guild).blacklist()
@@ -110,13 +110,13 @@ class HelpBaseSettingsMixin(MixinMeta):
         max.  Leaving blank keeps the state previously set.
 
         Examples (in situation where these commands are run one after another):
-            `[p]help settings precreationsettings maxtickets 1 False`
+            `[p]mhelp settings precreationsettings maxtickets 1 False`
             Users can make 1 ticket, no DM.
 
-            `[p]help settings precreationsettings maxtickets 2 True`
+            `[p]mhelp settings precreationsettings maxtickets 2 True`
             Users can make 2 tickets, send DM.
 
-            `[p]help settings precreationsettings maxtickets 1`
+            `[p]mhelp settings precreationsettings maxtickets 1`
             Users can make 1 ticket, send DM (carries over from last command)."""
         if number < 1:
             await ctx.send("Maximum number of tickets per user must be greater than 0.")
@@ -223,7 +223,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             )
 
         embed.set_footer(
-            text=f"Use {ctx.prefix}help settings postcreationsettings "
+            text=f"Use {ctx.prefix}mhelp settings postcreationsettings "
             "ticketname select to change to one of these presets."
         )
         await ctx.send(embed=embed)
@@ -265,7 +265,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         else:
             await ctx.send(
                 "Preset not selected.  To select this, use the command "
-                f"`{ctx.prefix}help settings postcreationsettings "
+                f"`{ctx.prefix}mhelp settings postcreationsettings "
                 f"ticketname select {len(data['presets'])}`."
             )
 
@@ -293,7 +293,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         """Select a ticket name preset to use.
 
         To view available presets, use the command
-        `[p]help settings postcreationsettings ticketnames list`"""
+        `[p]mhelp settings postcreationsettings ticketnames list`"""
         real_index = index - 1
         settings = await self.config.guild(ctx.guild).presetname()
         if settings["chosen"] == real_index:
@@ -303,7 +303,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         if index > len(settings["presets"]):
             await ctx.send(
                 "No preset exists at that index.  To view available presets, check out the "
-                f"command `{ctx.prefix}help settings postcreationsettings ticketnames list`."
+                f"command `{ctx.prefix}mhelp settings postcreationsettings ticketnames list`."
             )
             return
 
@@ -336,7 +336,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         if channel_id == message_id == 0:
             await ctx.send(
                 "Please set the message to listen on first with"
-                f"`{ctx.prefix}help settings precreationsettings setmsg`."
+                f"`{ctx.prefix}mhelp settings precreationsettings setmsg`."
             )
             return
 
@@ -347,7 +347,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             await self.config.guild(ctx.guild).msg.set("0-0")
             await ctx.send(
                 "Please reset the message to listen on "
-                f"`{ctx.prefix}help settings precreationsettings setmsg`."
+                f"`{ctx.prefix}mhelp settings precreationsettings setmsg`."
                 "\nReason: Channel has been deleted"
             )
             return
@@ -356,7 +356,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             await self.config.guild(ctx.guild).msg.set("0-0")
             await ctx.send(
                 "Please reset the message to listen on "
-                f"`{ctx.prefix}help settings precreationsettings setmsg`."
+                f"`{ctx.prefix}mhelp settings precreationsettings setmsg`."
                 "\nReason: Message has been deleted"
             )
             return
@@ -395,7 +395,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         if not category_id:
             await ctx.send(
                 "Please set the category to create ticket channels under with "
-                f"`{ctx.prefix}help settings postcreationsettings category`."
+                f"`{ctx.prefix}mhelp settings postcreationsettings category`."
             )
             return
 
@@ -403,7 +403,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         if not category:
             await ctx.send(
                 "Please reset the category to create ticket channels under with "
-                f"`{ctx.prefix}help settings postcreationsettings category`.\n"
+                f"`{ctx.prefix}mhelp settings postcreationsettings category`.\n"
                 "Reason: Category has been deleted."
             )
             return
@@ -414,7 +414,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             if not archive["category"]:
                 await ctx.send(
                     "Archive is enabled but no category is set. Please set one with "
-                    f"`{ctx.prefix}help settings closesettings archive category`."
+                    f"`{ctx.prefix}mhelp settings closesettings archive category`."
                 )
                 return
 
@@ -422,7 +422,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             if not archive_category:
                 await ctx.send(
                     "Archive is enabled but set category does not exist. Please reset it with "
-                    f"`{ctx.prefix}help settings closesettings archive category`."
+                    f"`{ctx.prefix}mhelp settings closesettings archive category`."
                 )
                 return
 
@@ -433,7 +433,7 @@ class HelpBaseSettingsMixin(MixinMeta):
             if not report_channel:
                 await ctx.send(
                     "Reporting is enabled but the channel has been deleted. Please reset it with "
-                    f"`{ctx.prefix}help settings closesettings reports`."
+                    f"`{ctx.prefix}mhelp settings closesettings reports`."
                 )
 
             if not report_channel.permissions_for(ctx.guild.me).send_messages:
