@@ -4,7 +4,7 @@ from mhelp.extensions.abc import MixinMeta
 from mhelp.extensions.mixin import RTMixin
 
 
-class HelpUserSettingsMixin(MixinMeta):
+class MhelpUserSettingsMixin(MixinMeta):
     @RTMixin.settings.group()
     async def userpermissions(self, ctx):
         """Control the permissions that users have with their own tickets"""

@@ -13,7 +13,7 @@ if discord.__version__ == "2.0.0a" or TYPE_CHECKING:
     from mhelp.extensions.views.queue import Queue
 
 
-class HelpBaseMixin(MixinMeta):
+class MhelpBaseMixin(MixinMeta):
     async def report_close(self, ctx, ticket, author, guild_settings, reason):
         representing = author.mention if isinstance(
             author, discord.Member) else author
@@ -546,7 +546,7 @@ class HelpBaseMixin(MixinMeta):
 
     def is_support_or_superior():
         async def predicate(ctx):
-            guild_settings = await ctx.bot.get_cog("Help").config.guild(ctx.guild).all()
+            guild_settings = await ctx.bot.get_cog("Mhelp").config.guild(ctx.guild).all()
             is_admin = await is_admin_or_superior(ctx.bot, ctx.author) or any(
                 [ur.id in guild_settings["supportroles"]
                     for ur in ctx.author.roles]
@@ -563,7 +563,7 @@ class HelpBaseMixin(MixinMeta):
     async def lock(self, ctx, channel: Optional[discord.TextChannel] = None):
         """Lock the specified ticket channel.  If no channel is provided, defaults to current.
 
-        Note: You must have a Help Support Role or a Red Admin Role to run this."""
+        Note: You must have a Mhelp Support Role or a Red Admin Role to run this."""
         if channel is None:
             channel = ctx.channel
 
@@ -633,7 +633,7 @@ class HelpBaseMixin(MixinMeta):
         ):
             await ctx.send(
                 "The moderator being assigned must be a Red Administrator "
-                "or have a Help Support Role."
+                "or have a Mhelp Support Role."
             )
             return
 

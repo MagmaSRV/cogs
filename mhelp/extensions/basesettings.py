@@ -9,7 +9,7 @@ from mhelp.extensions.abc import MixinMeta
 from mhelp.extensions.mixin import RTMixin
 
 
-class HelpBaseSettingsMixin(MixinMeta):
+class MhelpBaseSettingsMixin(MixinMeta):
     @RTMixin.settings.group(name="precreationsettings", aliases=["precs"])
     async def pre_creation_settings(self, ctx):
         """Control the actions that are checked/occur before ticket is created"""
@@ -322,7 +322,7 @@ class HelpBaseSettingsMixin(MixinMeta):
         # (which is bullshit), therefore, I have to require it.  I would really rather not.
         if not ctx.channel.permissions_for(ctx.guild.me).administrator:
             await ctx.send(
-                "I require Administrator permission to start the Help system.  Note that "
+                "I require Administrator permission to start the Mhelp system.  Note that "
                 "under normal circumstances this would not be required, however Discord has "
                 "changed how permissions operate with channel overwrites, and the "
                 "MANAGE_PERMISSIONS permission requires Administrator privilege."

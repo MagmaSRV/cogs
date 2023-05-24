@@ -8,7 +8,7 @@ from mhelp.extensions.abc import MixinMeta
 from mhelp.extensions.mixin import RTMixin
 
 
-class HelpCloseSettingsMixin(MixinMeta):
+class MhelpCloseSettingsMixin(MixinMeta):
     @RTMixin.settings.group()
     async def closesettings(self, ctx):
         """Control what actions occur when a ticket is closed"""
