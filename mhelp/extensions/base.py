@@ -7,10 +7,10 @@ import asyncio
 
 
 from mhelp.extensions.abc import MixinMeta
-from mhelpp.extensions.mixin import RTMixin
+from mhelp.extensions.mixin import RTMixin
 
 if discord.__version__ == "2.0.0a" or TYPE_CHECKING:
-    from mhelpp.extensions.views.queue import Queue
+    from mhelp.extensions.views.queue import Queue
 
 
 class HelpBaseMixin(MixinMeta):

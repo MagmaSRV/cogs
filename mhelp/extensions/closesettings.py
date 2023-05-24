@@ -5,7 +5,7 @@ import discord
 import contextlib
 
 from mhelp.extensions.abc import MixinMeta
-from mhelpp.extensions.mixin import RTMixin
+from mhelp.extensions.mixin import RTMixin
 
 
 class HelpCloseSettingsMixin(MixinMeta):
